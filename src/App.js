@@ -1,6 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Container, Nav, Navbar } from 'react-bootstrap';
+
 import CustomerForm from '../components/customers/CustomerForm';
+import CustomerDetails from './components/customers/CustomerDetails';
+//import ProductForm from './components/products/ProductForm';
+//import ProductDetails from './components/products/ProductDetails';
+//import OrderForm from './components/orders/OrderForm';
+//import OrderDetails from './components/orders/OrderDetails';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -23,7 +29,12 @@ function App() {
       <Container className="mt-4">
         <Routes>
           <Route path="/" element={<h1>Welcome to CT Mini E-Commerce</h1>} />
+         
+         
           <Route path="/customers/new" element={<CustomerForm />} />
+        
+          <Route path="/customers/:id" element={<CustomerDetails />} />
+        
         </Routes>
       </Container>
     </Router>
