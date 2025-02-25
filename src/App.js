@@ -2,13 +2,14 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 
 import CustomerForm from './components/customers/CustomerForm';
+import CustomerList from './components/customers/CustomerList';
 import CustomerDetails from './components/customers/CustomerDetails';
 import UpdateCustomerForm from './components/customers/UpdateCustomerForm';
 import ProductForm from './components/products/ProductForm';
 import ProductDetails from './components/products/ProductDetails';
 import UpdateProductForm from './components/products/UpdateProductForm';
-//import OrderForm from './components/orders/OrderForm';
-//import OrderDetails from './components/orders/OrderDetails';
+import OrderForm from './components/orders/OrderForm';
+import OrderHistory from './components/orders/OrderHistory';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -34,13 +35,15 @@ function App() {
          
          
           <Route path="/customers/new" element={<CustomerForm />} />
-        
+          <Route path="/customers" element={<CustomerList />} />
           <Route path="/customers/:id" element={<CustomerDetails />} />
 
           <Route path="/customers/:id/edit" element={<UpdateCustomerForm />} />
           <Route path="/products/new" element={<ProductForm />} />  
           <Route path="/products/:id" element={<ProductDetails />} /> 
           <Route path="/products/edit/:id" element={<UpdateProductForm />} />
+          <Route path="/orders/new" element={<OrderForm />} />
+          <Route path="/orders" element={<OrderHistory />} />
         </Routes>
       </Container>
     </Router>
