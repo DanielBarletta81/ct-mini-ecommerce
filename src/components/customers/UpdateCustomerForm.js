@@ -1,14 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
+import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 
-const CustomerForm = () => {
+const UpdateCustomerForm = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phoneNumber: ''
   });
   const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCustomer = async () => {
+      try {
+        const response = await api.getCustomer(id);
+        setFormData(response.data);
+        setLoading(false);
+      } catch (error) {
+        setMessage({ type: 'danger', text: 'Error loading customer data.' });
+        setLoading(false);
+      }
+    };
+    fetchCustomer();
+  }, [id]);
 
   const handleChange = (e) => {
     setFormData({
@@ -20,21 +38,22 @@ const CustomerForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.createCustomer(formData);
+      const response = await api.updateCustomer(id, formData);
       setMessage({ 
         type: 'success', 
-        text: `Customer ${response.data.name} created successfully with ID: ${response.data.id}!` 
+        text: `Customer ${response.data.name} updated successfully!` 
       });
-      setFormData({ name: '', email: '', phoneNumber: '' });
+      setTimeout(() => navigate(`/customers/${id}`), 2000);
     } catch (error) {
-      setMessage({ type: 'danger', text: 'Error creating customer. Please try again.' });
+      setMessage({ type: 'danger', text: 'Error updating customer. Please try again.' });
     }
   };
-  
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="p-4">
-      <h2>Create New Customer</h2>
+      <h2>Update Customer</h2>
       {message && (
         <Alert variant={message.type} onClose={() => setMessage(null)} dismissible>
           {message.text}
@@ -77,12 +96,15 @@ const CustomerForm = () => {
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit">
-          Create Customer
+        <Button variant="primary" type="submit" className="me-2">
+          Update Customer
+        </Button>
+        <Button variant="secondary" onClick={() => navigate(`/customers/${id}`)}>
+          Cancel
         </Button>
       </Form>
     </div>
   );
 };
 
-export default CustomerForm;
+export default UpdateCustomerForm;

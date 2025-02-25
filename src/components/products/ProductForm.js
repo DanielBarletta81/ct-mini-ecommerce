@@ -2,11 +2,10 @@ import { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import api from '../../services/api';
 
-const CustomerForm = () => {
+const ProductForm = () => {
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
-    phoneNumber: ''
+    price: ''
   });
   const [message, setMessage] = useState(null);
 
@@ -20,21 +19,20 @@ const CustomerForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.createCustomer(formData);
+      const response = await api.createProduct(formData);
       setMessage({ 
         type: 'success', 
-        text: `Customer ${response.data.name} created successfully with ID: ${response.data.id}!` 
+        text: `Product ${response.data.name} created successfully!` 
       });
-      setFormData({ name: '', email: '', phoneNumber: '' });
+      setFormData({ name: '', price: '' });
     } catch (error) {
-      setMessage({ type: 'danger', text: 'Error creating customer. Please try again.' });
+      setMessage({ type: 'danger', text: 'Error creating product. Please try again.' });
     }
   };
-  
 
   return (
     <div className="p-4">
-      <h2>Create New Customer</h2>
+      <h2>Create New Product</h2>
       {message && (
         <Alert variant={message.type} onClose={() => setMessage(null)} dismissible>
           {message.text}
@@ -49,40 +47,29 @@ const CustomerForm = () => {
             value={formData.name}
             onChange={handleChange}
             required
-            placeholder="Enter customer name"
+            placeholder="Enter product name"
           />
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label>Email</Form.Label>
+          <Form.Label>Price</Form.Label>
           <Form.Control
-            type="email"
-            name="email"
-            value={formData.email}
+            type="number"
+            step="0.01"
+            name="price"
+            value={formData.price}
             onChange={handleChange}
             required
-            placeholder="Enter email address"
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Phone Number</Form.Label>
-          <Form.Control
-            type="tel"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleChange}
-            required
-            placeholder="Enter phone number"
+            placeholder="Enter price"
           />
         </Form.Group>
 
         <Button variant="primary" type="submit">
-          Create Customer
+          Create Product
         </Button>
       </Form>
     </div>
   );
 };
 
-export default CustomerForm;
+export default ProductForm;

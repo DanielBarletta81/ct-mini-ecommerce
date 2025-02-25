@@ -1,83 +1,78 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Button, Alert, Modal } from 'react-bootstrap';
 import api from '../../services/api';
 
-const CustomerDetails = () => {
-  const [customer, setCustomer] = useState(null);
+const ProductDetails = () => {
+  const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const loadCustomerDetails = useCallback(async () => {
+  const loadProductDetails = useCallback(async () => {
     try {
-      const response = await api.getCustomer(id);
-      setCustomer(response.data);
+      const response = await api.getProduct(id);
+      setProduct(response.data);
       setLoading(false);
     } catch (error) {
-      setError('Failed to load customer details');
+      setError('Failed to load product details');
       setLoading(false);
     }
   }, [id]);
 
   useEffect(() => {
-    loadCustomerDetails();
-  }, [loadCustomerDetails]);
+    loadProductDetails();
+  }, [loadProductDetails]);
 
   const handleDelete = async () => {
     try {
-      await api.deleteCustomer(id);
-      navigate('/customers', { state: { message: 'Customer deleted successfully!' } });
+      await api.deleteProduct(id);
+      navigate('/products', { state: { message: 'Product deleted successfully!' } });
     } catch (error) {
-      setError('Failed to delete customer');
+      setError('Failed to delete product');
       setShowDeleteModal(false);
     }
   };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <Alert variant="danger">{error}</Alert>;
-  if (!customer) return <Alert variant="info">No customer found</Alert>;
+  if (!product) return <Alert variant="info">No product found</Alert>;
 
   return (
     <div className="p-4">
       <Card>
-        <Card.Header as="h5">Customer Details</Card.Header>
+        <Card.Header as="h5">Product Details</Card.Header>
         <Card.Body>
-          <Card.Title>{customer.name}</Card.Title>
+          <Card.Title>{product.name}</Card.Title>
           <div className="mb-3">
-            <strong>Email: </strong>
-            {customer.email}
+            <strong>Price: </strong>
+            ${product.price}
           </div>
           <div className="mb-3">
-            <strong>Phone: </strong>
-            {customer.phoneNumber}
-          </div>
-          <div className="mb-3">
-            <strong>Customer ID: </strong>
-            {customer.id}
+            <strong>Product ID: </strong>
+            {product.id}
           </div>
           <Button 
             variant="primary" 
             className="me-2"
-            onClick={() => navigate(`/customers/edit/${customer.id}`)}
+            onClick={() => navigate(`/products/edit/${product.id}`)}
           >
-            Edit Customer
+            Edit Product
           </Button>
           <Button 
             variant="danger" 
             className="me-2"
             onClick={() => setShowDeleteModal(true)}
           >
-            Delete Customer
+            Delete Product
           </Button>
           <Button 
             variant="secondary"
-            onClick={() => navigate('/customers')}
+            onClick={() => navigate('/products')}
           >
-            Back to Customers
+            Back to Products
           </Button>
         </Card.Body>
       </Card>
@@ -87,14 +82,14 @@ const CustomerDetails = () => {
           <Modal.Title>Confirm Delete</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to delete customer {customer.name}? This action cannot be undone.
+          Are you sure you want to delete product {product.name}? This action cannot be undone.
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
             Cancel
           </Button>
           <Button variant="danger" onClick={handleDelete}>
-            Delete Customer
+            Delete Product
           </Button>
         </Modal.Footer>
       </Modal>
@@ -102,4 +97,4 @@ const CustomerDetails = () => {
   );
 };
 
-export default CustomerDetails;
+export default ProductDetails;
